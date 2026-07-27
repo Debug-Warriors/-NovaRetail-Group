@@ -1,0 +1,26 @@
+[
+    {
+        "shipment_id": "SHP101",
+        "status": "Delayed",
+        "location": "Chicago",
+        "warehouse": "Dallas Regional Warehouse",
+        "expected_delivery": "2026-07-28",
+        "delay": "2 days"
+    },
+    {
+        "shipment_id": "SHP102",
+        "status": "In Transit",
+        "location": "New York",
+        "warehouse": "New York Regional Warehouse",
+        "expected_delivery": "2026-07-27",
+        "delay": "No delay"
+    },
+    {
+        "shipment_id": "SHP103",
+        "status": "Delivered",
+        "location": "Los Angeles",
+        "warehouse": "LA Regional Warehouse",
+        "expected_delivery": "2026-07-25",
+        "delay": "No delay"
+    }
+]

@@ -1,0 +1,23 @@
+[
+    {
+        "product_id": "P100",
+        "product_name": "Wireless Headphones",
+        "warehouse": "Dallas Regional Warehouse",
+        "quantity": 500,
+        "minimum_required": 100
+    },
+    {
+        "product_id": "P200",
+        "product_name": "Smart Watches",
+        "warehouse": "New York Regional Warehouse",
+        "quantity": 40,
+        "minimum_required": 100
+    },
+    {
+        "product_id": "P300",
+        "product_name": "Laptop Accessories",
+        "warehouse": "Chicago Regional Warehouse",
+        "quantity": 250,
+        "minimum_required": 75
+    }
+]

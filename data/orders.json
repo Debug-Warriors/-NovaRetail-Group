@@ -1,0 +1,26 @@
+[
+    {
+        "order_id": "ORD1001",
+        "shipment_id": "SHP101",
+        "customer": "Amazon Retail",
+        "status": "Waiting for Shipment"
+    },
+    {
+        "order_id": "ORD1002",
+        "shipment_id": "SHP101",
+        "customer": "Target",
+        "status": "Waiting for Shipment"
+    },
+    {
+        "order_id": "ORD1003",
+        "shipment_id": "SHP102",
+        "customer": "Walmart",
+        "status": "In Transit"
+    },
+    {
+        "order_id": "ORD1004",
+        "shipment_id": "SHP103",
+        "customer": "Costco",
+        "status": "Delivered"
+    }
+]

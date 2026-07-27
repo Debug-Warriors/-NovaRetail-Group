@@ -1,0 +1,32 @@
+[
+    {
+        "name": "ABC Electronics",
+        "location": "Dallas",
+        "available": true,
+        "rating": 4.8,
+        "products": [
+            "Wireless Headphones",
+            "Smart Watches"
+        ]
+    },
+    {
+        "name": "TechSource Ltd",
+        "location": "Chicago",
+        "available": true,
+        "rating": 4.6,
+        "products": [
+            "Laptop Accessories",
+            "Wireless Headphones"
+        ]
+    },
+    {
+        "name": "Global Devices",
+        "location": "New York",
+        "available": false,
+        "rating": 4.2,
+        "products": [
+            "Smart Watches",
+            "Tablets"
+        ]
+    }
+]
