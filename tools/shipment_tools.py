@@ -1,40 +1,29 @@
 """
 Shipment Tools
 
-These functions simulate NovaRetail's
-Shipment Tracking Platform API.
-
-Later these can be replaced with REST API calls.
+Shipment operations for NovaRetail.
+Compatible with the Phase 2 shipments.json dataset.
 """
 
 import json
 from pathlib import Path
 
-
 SHIPMENT_FILE = Path("data/shipments.json")
 
 
 def load_shipments():
-    """
-    Load shipment data from mock database.
-    """
-
     if not SHIPMENT_FILE.exists():
         return []
 
-    with open(
-        SHIPMENT_FILE,
-        "r",
-        encoding="utf-8"
-    ) as file:
+    with open(SHIPMENT_FILE, "r", encoding="utf-8") as f:
+        return json.load(f)
 
-        return json.load(file)
 
+# -----------------------------------------------------
+# Track Shipment
+# -----------------------------------------------------
 
 def track_shipment(shipment_id: str):
-    """
-    Find shipment details.
-    """
 
     shipments = load_shipments()
 
@@ -44,11 +33,22 @@ def track_shipment(shipment_id: str):
 
             return {
                 "shipment_id": shipment["shipment_id"],
+                "order_id": shipment["order_id"],
+                "product_id": shipment["product_id"],
+                "supplier_id": shipment["supplier_id"],
+                "warehouse_id": shipment["warehouse_id"],
+                "carrier": shipment["carrier"],
+                "origin": shipment["origin"],
+                "destination": shipment["destination"],
+                "route": shipment["route"],
                 "status": shipment["status"],
-                "location": shipment["location"],
-                "warehouse": shipment["warehouse"],
+                "current_location": shipment["current_location"],
                 "expected_delivery": shipment["expected_delivery"],
-                "delay": shipment.get("delay", "No delay"),
+                "delay_days": shipment["delay_days"],
+                "weather_risk": shipment["weather_risk"],
+                "traffic_status": shipment["traffic_status"],
+                "carrier_performance": shipment["carrier_performance"],
+                "risk_score": shipment["risk_score"],
             }
 
     return {
@@ -56,10 +56,11 @@ def track_shipment(shipment_id: str):
     }
 
 
+# -----------------------------------------------------
+# Delay Check
+# -----------------------------------------------------
+
 def check_shipment_delay(shipment_id: str):
-    """
-    Check shipment delay.
-    """
 
     shipment = track_shipment(shipment_id)
 
@@ -69,15 +70,16 @@ def check_shipment_delay(shipment_id: str):
     return {
         "shipment_id": shipment["shipment_id"],
         "status": shipment["status"],
-        "delayed": shipment["status"].lower() == "delayed",
-        "delay": shipment["delay"],
+        "delayed": shipment["delay_days"] > 0,
+        "delay_days": shipment["delay_days"],
     }
 
 
+# -----------------------------------------------------
+# Current Location
+# -----------------------------------------------------
+
 def get_shipment_location(shipment_id: str):
-    """
-    Get shipment location.
-    """
 
     shipment = track_shipment(shipment_id)
 
@@ -86,23 +88,22 @@ def get_shipment_location(shipment_id: str):
 
     return {
         "shipment_id": shipment["shipment_id"],
-        "current_location": shipment["location"],
+        "current_location": shipment["current_location"],
     }
 
 
-def identify_affected_orders(shipment_id: str):
-    """
-    Mock affected orders.
+# -----------------------------------------------------
+# Affected Orders
+# -----------------------------------------------------
 
-    Later this can use orders.json.
-    """
+def identify_affected_orders(shipment_id: str):
 
     shipment = track_shipment(shipment_id)
 
     if "error" in shipment:
         return shipment
 
-    if shipment["status"].lower() != "delayed":
+    if shipment["delay_days"] == 0:
 
         return {
             "shipment_id": shipment_id,
@@ -114,19 +115,18 @@ def identify_affected_orders(shipment_id: str):
     return {
         "shipment_id": shipment_id,
         "affected_orders": [
-            "ORD1001",
-            "ORD1002",
-            "ORD1003",
+            shipment["order_id"]
         ],
-        "count": 3,
-        "message": "Orders may experience delivery delays."
+        "count": 1,
+        "message": "This order may be delayed."
     }
 
 
+# -----------------------------------------------------
+# Reroute Shipment
+# -----------------------------------------------------
+
 def reroute_shipment(shipment_id: str):
-    """
-    Mock rerouting operation.
-    """
 
     shipment = track_shipment(shipment_id)
 
@@ -136,5 +136,6 @@ def reroute_shipment(shipment_id: str):
     return {
         "shipment_id": shipment_id,
         "status": "Rerouted",
+        "new_route": "Alternative Route Assigned",
         "message": "Shipment rerouted successfully."
     }

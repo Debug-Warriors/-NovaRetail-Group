@@ -1,52 +1,32 @@
 """
 Inventory Tools
 
-Simulates NovaRetail Inventory Management System APIs.
-
-Functions:
-- Check product inventory
-- Detect shortages
-- Check warehouse stock
+Inventory operations for NovaRetail.
+Compatible with the Phase 2 inventory dataset.
 """
 
 import json
 from pathlib import Path
 
-
 INVENTORY_FILE = Path("data/inventory.json")
-
 
 
 def load_inventory():
 
-    """
-    Load inventory data.
-    """
-
     if not INVENTORY_FILE.exists():
         return []
 
-    with open(
-        INVENTORY_FILE,
-        "r",
-        encoding="utf-8"
-    ) as file:
-
+    with open(INVENTORY_FILE, "r", encoding="utf-8") as file:
         return json.load(file)
 
 
+# -------------------------------------------------------
+# Check Product Inventory
+# -------------------------------------------------------
 
 def check_inventory(product_id: str):
 
-    """
-    Find inventory details for a product.
-
-    Example:
-        check_inventory("P100")
-    """
-
     inventory = load_inventory()
-
 
     for item in inventory:
 
@@ -54,123 +34,101 @@ def check_inventory(product_id: str):
 
             return {
 
-                "product_id":
-                    item["product_id"],
+                "product_id": item["product_id"],
 
-                "product_name":
-                    item["product_name"],
+                "product_name": item["product_name"],
 
-                "warehouse":
-                    item["warehouse"],
+                "supplier_id": item["supplier_id"],
 
-                "quantity":
-                    item["quantity"],
+                "warehouse_id": item["warehouse_id"],
 
-                "minimum_required":
-                    item["minimum_required"],
+                "quantity": item["quantity"],
 
-                "status":
-                    "Available"
-                    if item["quantity"] >= item["minimum_required"]
-                    else "Low Stock"
+                "minimum_required": item["minimum_required"],
+
+                "maximum_capacity": item["maximum_capacity"],
+
+                "unit_cost": item["unit_cost"],
+
+                "status": item["status"]
 
             }
 
-
     return {
-        "error":
-            f"Product {product_id} not found"
+        "error": f"Product {product_id} not found."
     }
 
 
+# -------------------------------------------------------
+# Inventory Shortage
+# -------------------------------------------------------
 
 def check_inventory_shortage(product_id: str):
 
-    """
-    Check whether a product has shortage.
-    """
-
     result = check_inventory(product_id)
-
 
     if "error" in result:
         return result
 
-
-    shortage = (
-        result["quantity"]
-        <
-        result["minimum_required"]
-    )
-
+    shortage = result["quantity"] < result["minimum_required"]
 
     return {
 
-        "product_id":
-            product_id,
+        "product_id": result["product_id"],
 
-        "shortage":
-            shortage,
+        "product_name": result["product_name"],
 
-        "available_quantity":
-            result["quantity"],
+        "shortage": shortage,
 
-        "required_quantity":
-            result["minimum_required"]
+        "available_quantity": result["quantity"],
+
+        "minimum_required": result["minimum_required"],
+
+        "status": result["status"]
 
     }
 
 
+# -------------------------------------------------------
+# Warehouse Availability
+# -------------------------------------------------------
 
-def warehouse_availability(warehouse_name: str):
-
-    """
-    Check warehouse capacity/status.
-    """
+def warehouse_availability(warehouse_id: str):
 
     inventory = load_inventory()
 
-
     products = []
-
 
     for item in inventory:
 
-        if (
-            item["warehouse"].lower()
-            ==
-            warehouse_name.lower()
-        ):
+        if item["warehouse_id"].lower() == warehouse_id.lower():
 
             products.append(item)
-
-
 
     if not products:
 
         return {
-            "error":
-            "Warehouse not found"
+            "error": f"Warehouse {warehouse_id} not found."
         }
-
-
 
     return {
 
-        "warehouse":
-            warehouse_name,
+        "warehouse_id": warehouse_id,
 
-        "products":
-            products,
+        "product_count": len(products),
 
-        "status":
-            "Operational"
+        "products": products,
+
+        "status": "Operational"
 
     }
+
+
+# -------------------------------------------------------
+# Identify All Shortages
+# -------------------------------------------------------
+
 def identify_inventory_shortage():
-    """
-    Return all products that are below their minimum required quantity.
-    """
 
     inventory = load_inventory()
 
@@ -186,11 +144,13 @@ def identify_inventory_shortage():
 
                 "product_name": item["product_name"],
 
-                "warehouse": item["warehouse"],
+                "warehouse_id": item["warehouse_id"],
 
                 "quantity": item["quantity"],
 
-                "minimum_required": item["minimum_required"]
+                "minimum_required": item["minimum_required"],
+
+                "status": item["status"]
 
             })
 

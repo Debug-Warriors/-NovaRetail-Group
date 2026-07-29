@@ -1,0 +1,193 @@
+[
+    {
+        "event_id": "EXT001",
+        "event_type": "Public Holiday",
+        "event_name": "US Independence Day",
+        "region": "United States",
+        "start_date": "2026-07-04",
+        "end_date": "2026-07-04",
+        "severity": "Medium",
+        "affected_warehouses": [
+            "W001",
+            "W002",
+            "W003"
+        ],
+        "affected_routes": [
+            "R001",
+            "R010",
+            "R020"
+        ],
+        "expected_impact": "Reduced warehouse staffing and slower deliveries.",
+        "risk_score": 55
+    },
+    {
+        "event_id": "EXT002",
+        "event_type": "Labor Strike",
+        "event_name": "Chicago Logistics Workers Strike",
+        "region": "Chicago",
+        "start_date": "2026-07-27",
+        "end_date": "2026-08-02",
+        "severity": "High",
+        "affected_warehouses": [
+            "W003"
+        ],
+        "affected_routes": [
+            "R001",
+            "R011",
+            "R019"
+        ],
+        "expected_impact": "Loading and unloading delays.",
+        "risk_score": 90
+    },
+    {
+        "event_id": "EXT003",
+        "event_type": "Port Congestion",
+        "event_name": "Los Angeles Port Congestion",
+        "region": "Los Angeles",
+        "start_date": "2026-07-20",
+        "end_date": "2026-08-05",
+        "severity": "Critical",
+        "affected_warehouses": [
+            "W007"
+        ],
+        "affected_routes": [
+            "R008"
+        ],
+        "expected_impact": "Container backlog causing shipment delays.",
+        "risk_score": 97
+    },
+    {
+        "event_id": "EXT004",
+        "event_type": "Public Holiday",
+        "event_name": "Labor Day",
+        "region": "United States",
+        "start_date": "2026-09-07",
+        "end_date": "2026-09-07",
+        "severity": "Medium",
+        "affected_warehouses": [
+            "W001",
+            "W002",
+            "W004",
+            "W005"
+        ],
+        "affected_routes": [
+            "R003",
+            "R004",
+            "R010"
+        ],
+        "expected_impact": "Lower transportation capacity.",
+        "risk_score": 58
+    },
+    {
+        "event_id": "EXT005",
+        "event_type": "Border Inspection",
+        "event_name": "Enhanced Customs Screening",
+        "region": "US Border",
+        "start_date": "2026-07-29",
+        "end_date": "2026-08-10",
+        "severity": "High",
+        "affected_warehouses": [
+            "W005",
+            "W008"
+        ],
+        "affected_routes": [
+            "R006",
+            "R015"
+        ],
+        "expected_impact": "Additional customs clearance time.",
+        "risk_score": 82
+    },
+    {
+        "event_id": "EXT006",
+        "event_type": "Fuel Shortage",
+        "event_name": "Regional Diesel Supply Disruption",
+        "region": "Texas",
+        "start_date": "2026-07-30",
+        "end_date": "2026-08-06",
+        "severity": "High",
+        "affected_warehouses": [
+            "W001"
+        ],
+        "affected_routes": [
+            "R001",
+            "R010",
+            "R012"
+        ],
+        "expected_impact": "Long-haul deliveries may be delayed.",
+        "risk_score": 84
+    },
+    {
+        "event_id": "EXT007",
+        "event_type": "Rail Maintenance",
+        "event_name": "Union Pacific Maintenance",
+        "region": "California",
+        "start_date": "2026-08-03",
+        "end_date": "2026-08-09",
+        "severity": "Medium",
+        "affected_warehouses": [
+            "W009"
+        ],
+        "affected_routes": [
+            "R008",
+            "R015"
+        ],
+        "expected_impact": "Reduced rail freight capacity.",
+        "risk_score": 68
+    },
+    {
+        "event_id": "EXT008",
+        "event_type": "Labor Strike",
+        "event_name": "Boston Truck Drivers Strike",
+        "region": "Boston",
+        "start_date": "2026-08-08",
+        "end_date": "2026-08-14",
+        "severity": "High",
+        "affected_warehouses": [
+            "W006"
+        ],
+        "affected_routes": [
+            "R002",
+            "R009",
+            "R016"
+        ],
+        "expected_impact": "Outbound deliveries delayed.",
+        "risk_score": 88
+    },
+    {
+        "event_id": "EXT009",
+        "event_type": "Airport Cargo Restrictions",
+        "event_name": "Denver Air Cargo Capacity Reduction",
+        "region": "Denver",
+        "start_date": "2026-08-12",
+        "end_date": "2026-08-18",
+        "severity": "Medium",
+        "affected_warehouses": [
+            "W010"
+        ],
+        "affected_routes": [
+            "R007",
+            "R014",
+            "R018"
+        ],
+        "expected_impact": "Express shipments delayed.",
+        "risk_score": 63
+    },
+    {
+        "event_id": "EXT010",
+        "event_type": "Severe Weather Warning",
+        "event_name": "Atlantic Hurricane Watch",
+        "region": "Florida",
+        "start_date": "2026-08-15",
+        "end_date": "2026-08-20",
+        "severity": "Critical",
+        "affected_warehouses": [
+            "W005"
+        ],
+        "affected_routes": [
+            "R004",
+            "R017"
+        ],
+        "expected_impact": "Possible warehouse closure and shipment suspension.",
+        "risk_score": 99
+    }
+]

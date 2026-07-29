@@ -11,7 +11,10 @@ Human approval is required before creating an incident.
 
 import re
 
-from langchain_core.messages import SystemMessage, HumanMessage
+from langchain_core.messages import (
+    SystemMessage,
+    HumanMessage,
+)
 
 from graph.state import SupplyChainState
 from llm import llm
@@ -27,21 +30,33 @@ from tools.incident_tools import (
 PROMPT = load_prompt("incident.txt")
 
 
+# -------------------------------------------------------
+# Helpers
+# -------------------------------------------------------
+
 def extract_incident_id(query: str):
 
-    """
-    Extract incident IDs like:
-    INC12345
-    A1B2C3D4
-    """
-
-    match = re.search(r"[A-Z0-9]{8}", query.upper())
+    match = re.search(r"INC\d+", query.upper())
 
     if match:
         return match.group()
 
     return None
 
+
+def extract_shipment_id(query: str):
+
+    match = re.search(r"SHP\d+", query.upper())
+
+    if match:
+        return match.group()
+
+    return ""
+
+
+# -------------------------------------------------------
+# Agent
+# -------------------------------------------------------
 
 def incident_agent(state: SupplyChainState):
 
@@ -51,9 +66,9 @@ def incident_agent(state: SupplyChainState):
 
     query_lower = query.lower()
 
-    # ------------------------------------------
-    # Check incident status
-    # ------------------------------------------
+    # --------------------------------------------------
+    # Incident Status
+    # --------------------------------------------------
 
     if "status" in query_lower:
 
@@ -61,9 +76,7 @@ def incident_agent(state: SupplyChainState):
 
         if incident_id is None:
 
-            state["response"] = (
-                "Please provide an Incident ID."
-            )
+            state["response"] = "Please provide an Incident ID."
 
             return state
 
@@ -71,9 +84,9 @@ def incident_agent(state: SupplyChainState):
 
         state["tool_result"] = result
 
-    # ------------------------------------------
-    # Escalate Incident
-    # ------------------------------------------
+    # --------------------------------------------------
+    # Escalate
+    # --------------------------------------------------
 
     elif "escalate" in query_lower:
 
@@ -81,9 +94,7 @@ def incident_agent(state: SupplyChainState):
 
         if incident_id is None:
 
-            state["response"] = (
-                "Please provide an Incident ID."
-            )
+            state["response"] = "Please provide an Incident ID."
 
             return state
 
@@ -91,13 +102,11 @@ def incident_agent(state: SupplyChainState):
 
         state["tool_result"] = result
 
-    # ------------------------------------------
-    # Create Incident
-    # ------------------------------------------
+    # --------------------------------------------------
+    # Create
+    # --------------------------------------------------
 
     else:
-
-        # Human approval required
 
         if not state.get("approval", False):
 
@@ -110,17 +119,39 @@ def incident_agent(state: SupplyChainState):
 
             return state
 
+        shipment_id = extract_shipment_id(query)
+
         incident = create_incident(
-            title="Supply Chain Incident",
-            description=query,
-            severity="High"
+
+            shipment_id=shipment_id,
+
+            order_id="",
+
+            supplier_id="",
+
+            warehouse_id="",
+
+            product_id="",
+
+            category="General",
+
+            severity="High",
+
+            root_cause="Under Investigation",
+
+            impact=query,
+
+            assigned_team="Operations",
+
+            risk_score=75
+
         )
 
         state["tool_result"] = incident
 
-    # ------------------------------------------
-    # Generate response using Llama
-    # ------------------------------------------
+    # --------------------------------------------------
+    # LLM Response
+    # --------------------------------------------------
 
     messages = [
 
@@ -136,7 +167,7 @@ Incident Data:
 
 {state['tool_result']}
 
-Generate the final response.
+Generate a professional response for NovaRetail.
 """
         ),
     ]

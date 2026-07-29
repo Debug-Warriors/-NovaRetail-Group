@@ -1,3 +1,5 @@
+from datetime import datetime
+
 """
 Reporting Agent
 
@@ -9,7 +11,7 @@ Responsibilities:
 
 from langchain_core.messages import (
     SystemMessage,
-    HumanMessage
+    HumanMessage,
 )
 
 from llm import llm
@@ -33,41 +35,53 @@ def reporting_agent(state: SupplyChainState):
 
     state["current_agent"] = "Reporting Agent"
 
+    today = datetime.now().strftime("%d %B %Y")
+
     query_lower = query.lower()
 
-    # ------------------------------------
+    # --------------------------------------------------
     # Incident Summary
-    # ------------------------------------
+    # --------------------------------------------------
 
-    if "incident summary" in query_lower:
+    if any(x in query_lower for x in [
+
+        "incident summary",
+
+        "incident report",
+
+        "open incidents",
+
+        "active incidents"
+
+    ]):
 
         result = generate_incident_summary()
 
-    # ------------------------------------
-    # Operational Report
-    # ------------------------------------
+        report_title = "Incident Summary Report"
 
-    elif "report" in query_lower:
-
-        result = generate_operational_report()
-
-    # ------------------------------------
+    # --------------------------------------------------
     # Stakeholder Update
-    # ------------------------------------
+    # --------------------------------------------------
 
-    elif (
-        "stakeholder" in query_lower
-        or "update" in query_lower
-        or "notification" in query_lower
-    ):
+    elif any(x in query_lower for x in [
 
-        # Human approval required
+        "stakeholder",
+
+        "executive update",
+
+        "leadership update",
+
+        "notification",
+
+        "business update"
+
+    ]):
 
         if not state.get("approval", False):
 
             state["response"] = (
-                "⚠️ Sending stakeholder notifications requires approval.\n\n"
-                "Press 'Approve' to continue."
+                "⚠️ Sending stakeholder updates requires approval.\n\n"
+                "Please approve to continue."
             )
 
             state["tool_result"] = {}
@@ -76,13 +90,17 @@ def reporting_agent(state: SupplyChainState):
 
         result = create_stakeholder_update()
 
-    # ------------------------------------
-    # Default
-    # ------------------------------------
+        report_title = "Stakeholder Update"
+
+    # --------------------------------------------------
+    # Operational Report (Default)
+    # --------------------------------------------------
 
     else:
 
         result = generate_operational_report()
+
+        report_title = "NovaRetail Operations Report"
 
     state["tool_result"] = result
 
@@ -98,11 +116,24 @@ User Request:
 
 {query}
 
-Report Data:
+Operational Data:
 
 {result}
 
-Generate the final response.
+Generate ONLY the report body.
+
+Start with:
+
+Summary:
+
+Then include, when appropriate:
+
+- Key Findings
+- Recommendations
+- Next Steps
+
+Use ONLY the supplied data.
+Do not invent information.
 """
         )
 
@@ -110,6 +141,12 @@ Generate the final response.
 
     response = llm.invoke(messages)
 
-    state["response"] = response.content
+    header = f"""# {report_title}
+
+**Date:** {today}
+
+"""
+
+    state["response"] = header + response.content
 
     return state

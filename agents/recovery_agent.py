@@ -3,15 +3,18 @@ Recovery Agent
 
 Responsibilities:
 - Recommend recovery actions
-- Compare alternatives
 - Generate recovery plans
+- Suggest alternative suppliers
 
-Human approval required before approving a recovery plan.
+Human approval required before executing recovery planning.
 """
 
 import re
 
-from langchain_core.messages import SystemMessage, HumanMessage
+from langchain_core.messages import (
+    SystemMessage,
+    HumanMessage,
+)
 
 from llm import llm
 from graph.state import SupplyChainState
@@ -20,17 +23,15 @@ from utils.prompt_loader import load_prompt
 
 from tools.recovery_tools import (
     generate_recovery_plan,
+    business_continuity_plan,
 )
 
 RECOVERY_PROMPT = load_prompt("recovery.txt")
 
 
-PRODUCTS = {
-    "P100": "Wireless Headphones",
-    "P200": "Smart Watches",
-    "P300": "Laptop Accessories",
-}
-
+# -------------------------------------------------------
+# Helpers
+# -------------------------------------------------------
 
 def extract_shipment_id(query: str):
 
@@ -52,7 +53,11 @@ def extract_product_id(query: str):
     return None
 
 
-def recovery_agent(state: SupplyChainState):
+# -------------------------------------------------------
+# Recovery Agent
+# -------------------------------------------------------
+
+def recovery_agent(state: dict):
 
     query = state["user_query"]
 
@@ -60,32 +65,33 @@ def recovery_agent(state: SupplyChainState):
 
     state["current_agent"] = "Recovery Agent"
 
-    # -----------------------------
-    # Human Approval
-    # -----------------------------
+    # --------------------------------------------------
+    # Approval Required
+    # --------------------------------------------------
 
     if not state.get("approval", False):
 
         state["response"] = (
-            "⚠️ Recovery plans require approval.\n\n"
-            "Approve the recovery plan to continue."
+            "⚠️ Recovery planning requires approval.\n\n"
+            "Please approve before generating a recovery plan."
         )
 
         return state
 
-    # -----------------------------
+    # --------------------------------------------------
     # Shipment
-    # -----------------------------
+    # --------------------------------------------------
 
     shipment_id = extract_shipment_id(query)
 
     if shipment_id is None:
+
         shipment_id = memory.get("last_shipment")
 
     if shipment_id is None:
 
         state["response"] = (
-            "Please provide a Shipment ID.\n"
+            "Please provide a Shipment ID.\n\n"
             "Example: SHP101"
         )
 
@@ -93,19 +99,20 @@ def recovery_agent(state: SupplyChainState):
 
     memory["last_shipment"] = shipment_id
 
-    # -----------------------------
+    # --------------------------------------------------
     # Product
-    # -----------------------------
+    # --------------------------------------------------
 
     product_id = extract_product_id(query)
 
     if product_id is None:
+
         product_id = memory.get("last_product")
 
     if product_id is None:
 
         state["response"] = (
-            "Please provide a Product ID.\n"
+            "Please provide a Product ID.\n\n"
             "Example: P100"
         )
 
@@ -113,27 +120,39 @@ def recovery_agent(state: SupplyChainState):
 
     memory["last_product"] = product_id
 
-    product_name = PRODUCTS.get(product_id)
+    # --------------------------------------------------
+    # Generate Recovery Plan
+    # --------------------------------------------------
 
-    if product_name is None:
+    if (
+        "continuity" in query.lower()
+        or
+        "business continuity" in query.lower()
+    ):
 
-        state["response"] = (
-            "Unknown Product ID."
+        result = business_continuity_plan(
+
+            shipment_id,
+
+            product_id
+
         )
 
-        return state
+    else:
 
-    result = generate_recovery_plan(
+        result = generate_recovery_plan(
 
-        shipment_id,
+            shipment_id,
 
-        product_name,
+            product_id
 
-        product_id
-
-    )
+        )
 
     state["tool_result"] = result
+
+    # --------------------------------------------------
+    # LLM Response
+    # --------------------------------------------------
 
     messages = [
 
@@ -147,11 +166,11 @@ User Request:
 
 {query}
 
-Recovery Information:
+Recovery Data:
 
 {result}
 
-Generate a recovery recommendation.
+Generate a professional recovery recommendation.
 """
         )
 

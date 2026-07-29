@@ -9,9 +9,13 @@ Responsibilities:
 
 import re
 
-from langchain_core.messages import SystemMessage, HumanMessage
+from langchain_core.messages import (
+    SystemMessage,
+    HumanMessage,
+)
 
 from llm import llm
+
 from graph.state import SupplyChainState
 
 from tools.supplier_tools import (
@@ -20,21 +24,18 @@ from tools.supplier_tools import (
     find_alternative_suppliers,
 )
 
+from tools.inventory_tools import load_inventory
+
 from utils.prompt_loader import load_prompt
 
 SUPPLIER_PROMPT = load_prompt("supplier.txt")
 
 
+# -------------------------------------------------------
+# Helpers
+# -------------------------------------------------------
+
 def extract_supplier_name(query: str):
-    """
-    Extract supplier name.
-
-    Example:
-        Find supplier ABC Electronics
-
-    Returns:
-        ABC Electronics
-    """
 
     match = re.search(
         r"supplier\s+(.+)",
@@ -48,33 +49,34 @@ def extract_supplier_name(query: str):
     return None
 
 
-def inventory_products():
-    """
-    Product list used for matching.
-    """
+def extract_product_id(query: str):
 
-    return [
-        "Wireless Headphones",
-        "Smart Watches",
-        "Laptop Accessories",
-        "Tablets",
-    ]
+    match = re.search(r"P\d+", query.upper())
 
-
-def extract_product(query: str):
-    """
-    Extract product name from query.
-    """
-
-    query_lower = query.lower()
-
-    for product in inventory_products():
-
-        if product.lower() in query_lower:
-            return product
+    if match:
+        return match.group()
 
     return None
 
+
+def extract_product_name(query: str):
+
+    inventory = load_inventory()
+
+    query_lower = query.lower()
+
+    for item in inventory:
+
+        if item["product_name"].lower() in query_lower:
+
+            return item["product_name"]
+
+    return None
+
+
+# -------------------------------------------------------
+# Supplier Agent
+# -------------------------------------------------------
 
 def supplier_agent(state: SupplyChainState):
 
@@ -86,40 +88,59 @@ def supplier_agent(state: SupplyChainState):
 
     state["current_agent"] = "Supplier Agent"
 
-    # -----------------------------------
-    # Alternative Supplier
-    # -----------------------------------
+    # --------------------------------------------------
+    # Alternative Suppliers
+    # --------------------------------------------------
 
-    if (
-        "alternative" in query_lower
-        or "another supplier" in query_lower
-        or "replacement supplier" in query_lower
-    ):
+    if any(x in query_lower for x in [
 
-        product = extract_product(query)
+        "alternative",
+
+        "replacement",
+
+        "another supplier",
+
+        "backup supplier"
+
+    ]):
+
+        product = extract_product_name(query)
 
         if product is None:
+
+            product_id = extract_product_id(query)
+
+            if product_id:
+
+                inventory = load_inventory()
+
+                for item in inventory:
+
+                    if item["product_id"] == product_id:
+
+                        product = item["product_name"]
+
+                        break
+
+        if product is None:
+
             product = memory.get("last_product")
 
         if product is None:
 
             state["response"] = (
-                "Please specify the product name."
+                "Please provide a Product ID or Product Name."
             )
 
             return state
 
         memory["last_product"] = product
 
-        # -----------------------------------
-        # Human Approval Required
-        # -----------------------------------
-
         if not state.get("approval", False):
 
             state["response"] = (
                 "⚠️ Selecting an alternative supplier requires approval.\n\n"
-                "Press 'Approve' to continue."
+                "Please approve to continue."
             )
 
             state["tool_result"] = {}
@@ -130,46 +151,54 @@ def supplier_agent(state: SupplyChainState):
 
         result = find_alternative_suppliers(product)
 
-    # -----------------------------------
+    # --------------------------------------------------
     # Supplier Availability
-    # -----------------------------------
+    # --------------------------------------------------
 
-    elif "availability" in query_lower:
+    elif any(x in query_lower for x in [
+
+        "availability",
+
+        "available",
+
+        "can supply"
+
+    ]):
 
         supplier = extract_supplier_name(query)
 
         if supplier is None:
+
             supplier = memory.get("last_supplier")
 
         if supplier is None:
 
             state["response"] = (
-                "Please specify the supplier name."
+                "Please provide the supplier name."
             )
 
             return state
 
         memory["last_supplier"] = supplier
 
-        result = check_supplier_availability(
-            supplier
-        )
+        result = check_supplier_availability(supplier)
 
-    # -----------------------------------
+    # --------------------------------------------------
     # Supplier Details
-    # -----------------------------------
+    # --------------------------------------------------
 
     else:
 
         supplier = extract_supplier_name(query)
 
         if supplier is None:
+
             supplier = memory.get("last_supplier")
 
         if supplier is None:
 
             state["response"] = (
-                "Please specify the supplier name."
+                "Please provide the supplier name."
             )
 
             return state
@@ -196,9 +225,13 @@ Supplier Data:
 
 {result}
 
-Generate the final answer.
+Generate a professional supplier response.
+
+Use only the supplied supplier information.
+Do not invent details.
 """
         ),
+
     ]
 
     response = llm.invoke(messages)

@@ -2,22 +2,221 @@
     {
         "product_id": "P100",
         "product_name": "Wireless Headphones",
-        "warehouse": "Dallas Regional Warehouse",
-        "quantity": 500,
-        "minimum_required": 100
+        "supplier_id": "SUP001",
+        "warehouse_id": "W001",
+        "quantity": 520,
+        "minimum_required": 150,
+        "maximum_capacity": 1000,
+        "status": "Available",
+        "unit_cost": 79.99
     },
     {
-        "product_id": "P200",
-        "product_name": "Smart Watches",
-        "warehouse": "New York Regional Warehouse",
-        "quantity": 40,
-        "minimum_required": 100
+        "product_id": "P101",
+        "product_name": "Bluetooth Speakers",
+        "supplier_id": "SUP001",
+        "warehouse_id": "W001",
+        "quantity": 310,
+        "minimum_required": 120,
+        "maximum_capacity": 800,
+        "status": "Available",
+        "unit_cost": 59.99
     },
     {
-        "product_id": "P300",
+        "product_id": "P102",
+        "product_name": "Gaming Mouse",
+        "supplier_id": "SUP002",
+        "warehouse_id": "W002",
+        "quantity": 85,
+        "minimum_required": 150,
+        "maximum_capacity": 700,
+        "status": "Low Stock",
+        "unit_cost": 49.99
+    },
+    {
+        "product_id": "P103",
+        "product_name": "Mechanical Keyboard",
+        "supplier_id": "SUP002",
+        "warehouse_id": "W002",
+        "quantity": 420,
+        "minimum_required": 120,
+        "maximum_capacity": 900,
+        "status": "Available",
+        "unit_cost": 89.99
+    },
+    {
+        "product_id": "P104",
+        "product_name": "USB-C Hub",
+        "supplier_id": "SUP004",
+        "warehouse_id": "W004",
+        "quantity": 260,
+        "minimum_required": 100,
+        "maximum_capacity": 600,
+        "status": "Available",
+        "unit_cost": 39.99
+    },
+    {
+        "product_id": "P105",
+        "product_name": "Laptop Stand",
+        "supplier_id": "SUP004",
+        "warehouse_id": "W004",
+        "quantity": 95,
+        "minimum_required": 120,
+        "maximum_capacity": 500,
+        "status": "Low Stock",
+        "unit_cost": 34.99
+    },
+    {
+        "product_id": "P106",
+        "product_name": "Smart Watch",
+        "supplier_id": "SUP003",
+        "warehouse_id": "W003",
+        "quantity": 180,
+        "minimum_required": 150,
+        "maximum_capacity": 700,
+        "status": "Available",
+        "unit_cost": 199.99
+    },
+    {
+        "product_id": "P107",
+        "product_name": "Fitness Tracker",
+        "supplier_id": "SUP010",
+        "warehouse_id": "W010",
+        "quantity": 65,
+        "minimum_required": 100,
+        "maximum_capacity": 500,
+        "status": "Low Stock",
+        "unit_cost": 99.99
+    },
+    {
+        "product_id": "P108",
+        "product_name": "Tablet",
+        "supplier_id": "SUP003",
+        "warehouse_id": "W003",
+        "quantity": 210,
+        "minimum_required": 100,
+        "maximum_capacity": 600,
+        "status": "Available",
+        "unit_cost": 349.99
+    },
+    {
+        "product_id": "P109",
+        "product_name": "Power Bank",
+        "supplier_id": "SUP008",
+        "warehouse_id": "W008",
+        "quantity": 490,
+        "minimum_required": 150,
+        "maximum_capacity": 900,
+        "status": "Available",
+        "unit_cost": 29.99
+    },
+    {
+        "product_id": "P110",
         "product_name": "Laptop Accessories",
-        "warehouse": "Chicago Regional Warehouse",
-        "quantity": 250,
-        "minimum_required": 75
+        "supplier_id": "SUP002",
+        "warehouse_id": "W002",
+        "quantity": 130,
+        "minimum_required": 150,
+        "maximum_capacity": 700,
+        "status": "Low Stock",
+        "unit_cost": 69.99
+    },
+    {
+        "product_id": "P111",
+        "product_name": "Webcam",
+        "supplier_id": "SUP005",
+        "warehouse_id": "W005",
+        "quantity": 340,
+        "minimum_required": 120,
+        "maximum_capacity": 700,
+        "status": "Available",
+        "unit_cost": 74.99
+    },
+    {
+        "product_id": "P112",
+        "product_name": "External SSD",
+        "supplier_id": "SUP005",
+        "warehouse_id": "W005",
+        "quantity": 150,
+        "minimum_required": 100,
+        "maximum_capacity": 600,
+        "status": "Available",
+        "unit_cost": 129.99
+    },
+    {
+        "product_id": "P113",
+        "product_name": "Wireless Charger",
+        "supplier_id": "SUP015",
+        "warehouse_id": "W002",
+        "quantity": 55,
+        "minimum_required": 100,
+        "maximum_capacity": 500,
+        "status": "Low Stock",
+        "unit_cost": 24.99
+    },
+    {
+        "product_id": "P114",
+        "product_name": "Monitor",
+        "supplier_id": "SUP006",
+        "warehouse_id": "W006",
+        "quantity": 185,
+        "minimum_required": 120,
+        "maximum_capacity": 600,
+        "status": "Available",
+        "unit_cost": 249.99
+    },
+    {
+        "product_id": "P115",
+        "product_name": "Router",
+        "supplier_id": "SUP006",
+        "warehouse_id": "W006",
+        "quantity": 420,
+        "minimum_required": 100,
+        "maximum_capacity": 700,
+        "status": "Available",
+        "unit_cost": 109.99
+    },
+    {
+        "product_id": "P116",
+        "product_name": "Keyboard & Mouse Combo",
+        "supplier_id": "SUP012",
+        "warehouse_id": "W004",
+        "quantity": 145,
+        "minimum_required": 150,
+        "maximum_capacity": 600,
+        "status": "Low Stock",
+        "unit_cost": 79.99
+    },
+    {
+        "product_id": "P117",
+        "product_name": "Printer",
+        "supplier_id": "SUP013",
+        "warehouse_id": "W009",
+        "quantity": 260,
+        "minimum_required": 100,
+        "maximum_capacity": 500,
+        "status": "Available",
+        "unit_cost": 189.99
+    },
+    {
+        "product_id": "P118",
+        "product_name": "Docking Station",
+        "supplier_id": "SUP013",
+        "warehouse_id": "W009",
+        "quantity": 88,
+        "minimum_required": 120,
+        "maximum_capacity": 450,
+        "status": "Low Stock",
+        "unit_cost": 149.99
+    },
+    {
+        "product_id": "P119",
+        "product_name": "Noise Cancelling Earbuds",
+        "supplier_id": "SUP001",
+        "warehouse_id": "W001",
+        "quantity": 390,
+        "minimum_required": 150,
+        "maximum_capacity": 800,
+        "status": "Available",
+        "unit_cost": 169.99
     }
 ]

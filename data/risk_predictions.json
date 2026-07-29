@@ -1,0 +1,234 @@
+[
+    {
+        "risk_id": "RISK001",
+        "risk_type": "Supplier Reliability",
+        "severity": "High",
+        "confidence": 94,
+        "status": "Open",
+        "prediction_date": "2026-07-28",
+        "expected_disruption_date": "2026-08-03",
+        "affected_supplier": "TechSource Ltd",
+        "affected_products": [
+            "Laptop Accessories",
+            "Wireless Headphones"
+        ],
+        "affected_shipments": [
+            "SHP105",
+            "SHP118"
+        ],
+        "business_impact": "Potential inventory shortage within 5 days.",
+        "estimated_financial_impact": 180000,
+        "explanation": [
+            "Supplier on-time delivery declined from 94% to 87%.",
+            "Average delivery delay increased for three consecutive weeks.",
+            "Late deliveries increased by 100%."
+        ],
+        "recommended_actions": [
+            "Increase purchase orders from ABC Electronics.",
+            "Expedite pending shipments.",
+            "Monitor supplier performance daily."
+        ]
+    },
+    {
+        "risk_id": "RISK002",
+        "risk_type": "Weather",
+        "severity": "Critical",
+        "confidence": 97,
+        "status": "Open",
+        "prediction_date": "2026-07-28",
+        "expected_disruption_date": "2026-07-30",
+        "affected_route": "R004",
+        "affected_shipments": [
+            "SHP112",
+            "SHP113"
+        ],
+        "business_impact": "Shipment delays of 2–4 days expected.",
+        "estimated_financial_impact": 250000,
+        "explanation": [
+            "Hurricane warning issued.",
+            "Weather risk score is 98.",
+            "Route already experiencing congestion."
+        ],
+        "recommended_actions": [
+            "Reroute shipments.",
+            "Notify customers.",
+            "Increase warehouse safety stock."
+        ]
+    },
+    {
+        "risk_id": "RISK003",
+        "risk_type": "Inventory",
+        "severity": "High",
+        "confidence": 92,
+        "status": "Open",
+        "prediction_date": "2026-07-28",
+        "expected_disruption_date": "2026-08-02",
+        "affected_product": "Smart Watches",
+        "product_id": "P200",
+        "business_impact": "Inventory expected to reach stock-out.",
+        "estimated_financial_impact": 140000,
+        "explanation": [
+            "Demand forecast increasing by 30%.",
+            "Current inventory below minimum threshold.",
+            "Inbound shipments delayed."
+        ],
+        "recommended_actions": [
+            "Increase replenishment.",
+            "Prioritize supplier orders.",
+            "Allocate inventory across warehouses."
+        ]
+    },
+    {
+        "risk_id": "RISK004",
+        "risk_type": "Warehouse Capacity",
+        "severity": "Medium",
+        "confidence": 85,
+        "status": "Monitoring",
+        "prediction_date": "2026-07-28",
+        "expected_disruption_date": "2026-08-05",
+        "affected_warehouse": "Chicago Regional Warehouse",
+        "business_impact": "Warehouse expected to exceed 95% utilization.",
+        "estimated_financial_impact": 90000,
+        "explanation": [
+            "Warehouse utilization increasing.",
+            "Inbound shipments exceed outbound capacity."
+        ],
+        "recommended_actions": [
+            "Redirect shipments.",
+            "Increase labor shifts.",
+            "Use overflow warehouse."
+        ]
+    },
+    {
+        "risk_id": "RISK005",
+        "risk_type": "Transportation",
+        "severity": "Critical",
+        "confidence": 96,
+        "status": "Open",
+        "prediction_date": "2026-07-28",
+        "expected_disruption_date": "2026-07-31",
+        "affected_route": "R001",
+        "affected_shipments": [
+            "SHP101",
+            "SHP119"
+        ],
+        "business_impact": "Multiple delayed shipments expected.",
+        "estimated_financial_impact": 310000,
+        "explanation": [
+            "High congestion detected.",
+            "Weather alert active.",
+            "Average delay increased to 18 hours."
+        ],
+        "recommended_actions": [
+            "Use alternate logistics provider.",
+            "Activate recovery plan.",
+            "Notify regional warehouse."
+        ]
+    },
+    {
+        "risk_id": "RISK006",
+        "risk_type": "Demand Spike",
+        "severity": "High",
+        "confidence": 91,
+        "status": "Open",
+        "prediction_date": "2026-07-28",
+        "expected_disruption_date": "2026-08-04",
+        "affected_product": "Wireless Headphones",
+        "business_impact": "Demand exceeds available inventory.",
+        "estimated_financial_impact": 220000,
+        "explanation": [
+            "Forecast demand increased by 40%.",
+            "Supplier capacity unchanged.",
+            "Inventory growth insufficient."
+        ],
+        "recommended_actions": [
+            "Increase production orders.",
+            "Source alternate suppliers.",
+            "Limit promotional campaigns."
+        ]
+    },
+    {
+        "risk_id": "RISK007",
+        "risk_type": "Labor Strike",
+        "severity": "High",
+        "confidence": 93,
+        "status": "Open",
+        "prediction_date": "2026-07-28",
+        "expected_disruption_date": "2026-08-01",
+        "affected_location": "Chicago",
+        "business_impact": "Loading operations may reduce by 60%.",
+        "estimated_financial_impact": 165000,
+        "explanation": [
+            "Labor strike scheduled.",
+            "Critical warehouse affected."
+        ],
+        "recommended_actions": [
+            "Shift operations.",
+            "Increase transportation capacity elsewhere."
+        ]
+    },
+    {
+        "risk_id": "RISK008",
+        "risk_type": "Supplier Capacity",
+        "severity": "Medium",
+        "confidence": 84,
+        "status": "Monitoring",
+        "prediction_date": "2026-07-28",
+        "expected_disruption_date": "2026-08-08",
+        "affected_supplier": "Global Devices",
+        "business_impact": "Supplier may fail to meet demand.",
+        "estimated_financial_impact": 110000,
+        "explanation": [
+            "Supplier availability declining.",
+            "Quality score dropped."
+        ],
+        "recommended_actions": [
+            "Review supplier contract.",
+            "Increase secondary sourcing."
+        ]
+    },
+    {
+        "risk_id": "RISK009",
+        "risk_type": "Port Congestion",
+        "severity": "Critical",
+        "confidence": 95,
+        "status": "Open",
+        "prediction_date": "2026-07-28",
+        "expected_disruption_date": "2026-08-02",
+        "affected_route": "R008",
+        "business_impact": "Container backlog may delay imports by 5 days.",
+        "estimated_financial_impact": 275000,
+        "explanation": [
+            "Port congestion reported.",
+            "High inbound shipment dependency."
+        ],
+        "recommended_actions": [
+            "Use alternate port.",
+            "Increase inland transport."
+        ]
+    },
+    {
+        "risk_id": "RISK010",
+        "risk_type": "Multi-Factor Risk",
+        "severity": "Critical",
+        "confidence": 99,
+        "status": "Open",
+        "prediction_date": "2026-07-28",
+        "expected_disruption_date": "2026-08-01",
+        "business_impact": "High probability of supply chain disruption.",
+        "estimated_financial_impact": 450000,
+        "explanation": [
+            "Supplier reliability declining.",
+            "Weather alert active.",
+            "Inventory below safety stock.",
+            "Transport congestion high.",
+            "Demand forecast increasing."
+        ],
+        "recommended_actions": [
+            "Initiate business continuity plan.",
+            "Increase safety stock.",
+            "Approve alternate supplier.",
+            "Reroute shipments immediately."
+        ]
+    }
+]

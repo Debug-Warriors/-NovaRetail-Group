@@ -1,32 +1,242 @@
 [
     {
+        "supplier_id": "SUP001",
         "name": "ABC Electronics",
         "location": "Dallas",
+        "country": "USA",
         "available": true,
-        "rating": 4.8,
-        "products": [
-            "Wireless Headphones",
-            "Smart Watches"
-        ]
+        "rating": 4.9,
+        "primary_warehouse": "W001",
+        "products": ["P100", "P101", "P106", "P119"],
+        "email": "contact@abcelectronics.com",
+        "phone": "+1-214-555-1001"
     },
     {
+        "supplier_id": "SUP002",
         "name": "TechSource Ltd",
         "location": "Chicago",
+        "country": "USA",
         "available": true,
-        "rating": 4.6,
-        "products": [
-            "Laptop Accessories",
-            "Wireless Headphones"
-        ]
+        "rating": 4.8,
+        "primary_warehouse": "W002",
+        "products": ["P102", "P103", "P110"],
+        "email": "sales@techsource.com",
+        "phone": "+1-312-555-1002"
     },
     {
+        "supplier_id": "SUP003",
         "name": "Global Devices",
         "location": "New York",
+        "country": "USA",
         "available": false,
         "rating": 4.2,
-        "products": [
-            "Smart Watches",
-            "Tablets"
-        ]
+        "primary_warehouse": "W003",
+        "products": ["P106", "P108", "P109"],
+        "email": "info@globaldevices.com",
+        "phone": "+1-212-555-1003"
+    },
+    {
+        "supplier_id": "SUP004",
+        "name": "SmartTech Manufacturing",
+        "location": "Los Angeles",
+        "country": "USA",
+        "available": true,
+        "rating": 4.7,
+        "primary_warehouse": "W004",
+        "products": ["P104", "P105", "P118"],
+        "email": "support@smarttech.com",
+        "phone": "+1-310-555-1004"
+    },
+    {
+        "supplier_id": "SUP005",
+        "name": "Elite Components",
+        "location": "Atlanta",
+        "country": "USA",
+        "available": true,
+        "rating": 4.6,
+        "primary_warehouse": "W005",
+        "products": ["P111", "P112", "P113"],
+        "email": "contact@elitecomponents.com",
+        "phone": "+1-404-555-1005"
+    },
+    {
+        "supplier_id": "SUP006",
+        "name": "Future Gadgets",
+        "location": "Miami",
+        "country": "USA",
+        "available": true,
+        "rating": 4.5,
+        "primary_warehouse": "W006",
+        "products": ["P114", "P115", "P116"],
+        "email": "hello@futuregadgets.com",
+        "phone": "+1-305-555-1006"
+    },
+    {
+        "supplier_id": "SUP007",
+        "name": "Nexa Electronics",
+        "location": "Seattle",
+        "country": "USA",
+        "available": true,
+        "rating": 4.4,
+        "primary_warehouse": "W007",
+        "products": ["P117", "P118", "P104"],
+        "email": "sales@nexaelectronics.com",
+        "phone": "+1-206-555-1007"
+    },
+    {
+        "supplier_id": "SUP008",
+        "name": "Prime Digital",
+        "location": "Denver",
+        "country": "USA",
+        "available": false,
+        "rating": 4.1,
+        "primary_warehouse": "W008",
+        "products": ["P109", "P112", "P115"],
+        "email": "info@primedigital.com",
+        "phone": "+1-303-555-1008"
+    },
+    {
+        "supplier_id": "SUP009",
+        "name": "Vision Hardware",
+        "location": "Houston",
+        "country": "USA",
+        "available": true,
+        "rating": 4.3,
+        "primary_warehouse": "W009",
+        "products": ["P102", "P110", "P111"],
+        "email": "support@visionhardware.com",
+        "phone": "+1-713-555-1009"
+    },
+    {
+        "supplier_id": "SUP010",
+        "name": "BlueChip Electronics",
+        "location": "Phoenix",
+        "country": "USA",
+        "available": true,
+        "rating": 4.7,
+        "primary_warehouse": "W010",
+        "products": ["P100", "P103", "P107"],
+        "email": "sales@bluechip.com",
+        "phone": "+1-602-555-1010"
+    },
+    {
+        "supplier_id": "SUP011",
+        "name": "Sigma Supply",
+        "location": "Boston",
+        "country": "USA",
+        "available": true,
+        "rating": 4.6,
+        "primary_warehouse": "W003",
+        "products": ["P105", "P114", "P119"],
+        "email": "contact@sigmasupply.com",
+        "phone": "+1-617-555-1011"
+    },
+    {
+        "supplier_id": "SUP012",
+        "name": "Omni Devices",
+        "location": "San Francisco",
+        "country": "USA",
+        "available": true,
+        "rating": 4.5,
+        "primary_warehouse": "W004",
+        "products": ["P101", "P108", "P116"],
+        "email": "info@omnidevices.com",
+        "phone": "+1-415-555-1012"
+    },
+    {
+        "supplier_id": "SUP013",
+        "name": "Zenith Tech",
+        "location": "Austin",
+        "country": "USA",
+        "available": true,
+        "rating": 4.8,
+        "primary_warehouse": "W009",
+        "products": ["P104", "P117", "P118"],
+        "email": "sales@zenithtech.com",
+        "phone": "+1-512-555-1013"
+    },
+    {
+        "supplier_id": "SUP014",
+        "name": "Quantum Electronics",
+        "location": "Portland",
+        "country": "USA",
+        "available": false,
+        "rating": 4.0,
+        "primary_warehouse": "W007",
+        "products": ["P102", "P109", "P110"],
+        "email": "contact@quantumelectronics.com",
+        "phone": "+1-503-555-1014"
+    },
+    {
+        "supplier_id": "SUP015",
+        "name": "Alpha Manufacturing",
+        "location": "Detroit",
+        "country": "USA",
+        "available": true,
+        "rating": 4.6,
+        "primary_warehouse": "W002",
+        "products": ["P113", "P114", "P115"],
+        "email": "info@alphamfg.com",
+        "phone": "+1-313-555-1015"
+    },
+    {
+        "supplier_id": "SUP016",
+        "name": "Vertex Components",
+        "location": "Charlotte",
+        "country": "USA",
+        "available": true,
+        "rating": 4.4,
+        "primary_warehouse": "W005",
+        "products": ["P100", "P107", "P112"],
+        "email": "sales@vertexcomponents.com",
+        "phone": "+1-704-555-1016"
+    },
+    {
+        "supplier_id": "SUP017",
+        "name": "Delta Electronics",
+        "location": "Nashville",
+        "country": "USA",
+        "available": true,
+        "rating": 4.5,
+        "primary_warehouse": "W005",
+        "products": ["P103", "P106", "P119"],
+        "email": "support@deltaelectronics.com",
+        "phone": "+1-615-555-1017"
+    },
+    {
+        "supplier_id": "SUP018",
+        "name": "Bright Systems",
+        "location": "Las Vegas",
+        "country": "USA",
+        "available": true,
+        "rating": 4.3,
+        "primary_warehouse": "W010",
+        "products": ["P101", "P111", "P116"],
+        "email": "contact@brightsystems.com",
+        "phone": "+1-702-555-1018"
+    },
+    {
+        "supplier_id": "SUP019",
+        "name": "Apex Technology",
+        "location": "Philadelphia",
+        "country": "USA",
+        "available": false,
+        "rating": 4.2,
+        "primary_warehouse": "W003",
+        "products": ["P108", "P113", "P117"],
+        "email": "sales@apextechnology.com",
+        "phone": "+1-215-555-1019"
+    },
+    {
+        "supplier_id": "SUP020",
+        "name": "Core Industrial",
+        "location": "San Diego",
+        "country": "USA",
+        "available": true,
+        "rating": 4.7,
+        "primary_warehouse": "W004",
+        "products": ["P105", "P110", "P118"],
+        "email": "contact@coreindustrial.com",
+        "phone": "+1-619-555-1020"
     }
 ]

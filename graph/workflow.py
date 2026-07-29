@@ -26,6 +26,8 @@ Router
  v
 Final Response
 """
+from agents.general_agent import general_agent
+
 
 from langgraph.graph import (
     StateGraph,
@@ -55,6 +57,7 @@ from agents.recovery_agent import recovery_agent
 
 from agents.reporting_agent import reporting_agent
 from agents.unsupported_agent import unsupported_agent
+from agents.risk_agent import risk_agent
 
 
 # ------------------------------------------------
@@ -70,6 +73,11 @@ builder = StateGraph(
 # ------------------------------------------------
 # Register Nodes
 # ------------------------------------------------
+
+builder.add_node(
+    "general_agent",
+    general_agent
+)
 
 builder.add_node(
     "supervisor",
@@ -116,6 +124,10 @@ builder.add_node(
     unsupported_agent
 )
 
+builder.add_node(
+    "risk", 
+    risk_agent
+)
 
 # ------------------------------------------------
 # Starting Point
@@ -124,6 +136,11 @@ builder.add_node(
 builder.add_edge(
     START,
     "supervisor"
+)
+
+builder.add_edge(
+    "general_agent",
+    END
 )
 
 
@@ -159,6 +176,10 @@ builder.add_conditional_edges(
             "reporting_agent",
         "unsupported":
             "unsupported",
+        "risk": 
+            "risk",
+        "general_agent":
+            "general_agent",
 
     }
 
@@ -206,6 +227,10 @@ builder.add_edge(
 )
 builder.add_edge(
     "unsupported",
+    END
+)
+builder.add_edge(
+    "risk", 
     END
 )
 

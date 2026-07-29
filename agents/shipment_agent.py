@@ -6,14 +6,14 @@ Responsibilities:
 - Check shipment delays
 - Get shipment location
 - Identify affected orders
-- Reroute shipment
+- Reroute shipments
 """
 
 import re
 
 from langchain_core.messages import (
     SystemMessage,
-    HumanMessage
+    HumanMessage,
 )
 
 from llm import llm
@@ -33,18 +33,23 @@ from tools.shipment_tools import (
 SHIPMENT_PROMPT = load_prompt("shipment.txt")
 
 
+# -------------------------------------------------------
+# Helper
+# -------------------------------------------------------
+
 def extract_shipment_id(query: str):
 
-    match = re.search(
-        r"SHP\d+",
-        query.upper()
-    )
+    match = re.search(r"SHP\d+", query.upper())
 
     if match:
         return match.group()
 
     return None
 
+
+# -------------------------------------------------------
+# Shipment Agent
+# -------------------------------------------------------
 
 def shipment_agent(state: SupplyChainState):
 
@@ -62,7 +67,7 @@ def shipment_agent(state: SupplyChainState):
     if shipment_id is None:
 
         state["response"] = (
-            "Please provide a Shipment ID.\n"
+            "Please provide a Shipment ID.\n\n"
             "Example: SHP101"
         )
 
@@ -72,71 +77,96 @@ def shipment_agent(state: SupplyChainState):
 
     query_lower = query.lower()
 
-    # ---------------------------------------
+    # --------------------------------------------------
     # Reroute Shipment
-    # ---------------------------------------
+    # --------------------------------------------------
 
-    if (
-        "reroute" in query_lower
-        or "change route" in query_lower
-    ):
+    if any(x in query_lower for x in [
+
+        "reroute",
+
+        "change route",
+
+        "alternate route",
+
+        "divert"
+
+    ]):
 
         if not state.get("approval", False):
 
             state["response"] = (
-                "⚠️ Rerouting a shipment requires approval.\n\n"
-                "Press 'Approve' to continue."
+                "⚠️ Shipment rerouting requires approval.\n\n"
+                "Please approve to continue."
             )
 
             state["tool_result"] = {}
+
             state["memory"] = memory
 
             return state
 
         result = reroute_shipment(shipment_id)
 
-    # ---------------------------------------
+    # --------------------------------------------------
     # Affected Orders
-    # ---------------------------------------
+    # --------------------------------------------------
 
-    elif (
-        "affected order" in query_lower
-        or "affected orders" in query_lower
-    ):
+    elif any(x in query_lower for x in [
 
-        result = identify_affected_orders(
-            shipment_id
-        )
+        "affected order",
 
-    # ---------------------------------------
+        "affected orders",
+
+        "orders affected"
+
+    ]):
+
+        result = identify_affected_orders(shipment_id)
+
+    # --------------------------------------------------
     # Shipment Delay
-    # ---------------------------------------
+    # --------------------------------------------------
 
-    elif "delay" in query_lower:
+    elif any(x in query_lower for x in [
 
-        result = check_shipment_delay(
-            shipment_id
-        )
+        "delay",
 
-    # ---------------------------------------
+        "late",
+
+        "eta",
+
+        "expected delivery"
+
+    ]):
+
+        result = check_shipment_delay(shipment_id)
+
+    # --------------------------------------------------
     # Shipment Location
-    # ---------------------------------------
+    # --------------------------------------------------
 
-    elif "location" in query_lower:
+    elif any(x in query_lower for x in [
 
-        result = get_shipment_location(
-            shipment_id
-        )
+        "location",
 
-    # ---------------------------------------
+        "where",
+
+        "current location",
+
+        "where is"
+
+    ]):
+
+        result = get_shipment_location(shipment_id)
+
+    # --------------------------------------------------
     # Track Shipment
-    # ---------------------------------------
+    # --------------------------------------------------
 
     else:
 
-        result = track_shipment(
-            shipment_id
-        )
+        result = track_shipment(shipment_id)
 
     state["tool_result"] = result
 
@@ -156,7 +186,10 @@ Shipment Information:
 
 {result}
 
-Generate the final response.
+Generate a professional shipment response.
+
+Only use the supplied shipment information.
+Do not invent details.
 """
         )
 

@@ -3,27 +3,106 @@ from langchain_core.messages import HumanMessage, AIMessage
 
 from graph.workflow import graph
 
+# ---------------------------------------------------
+# Page Config (Must be first Streamlit command)
+# ---------------------------------------------------
+
 st.set_page_config(
-    page_title="NovaRetail AI Assistant",
+    page_title="NovaRetail Supply Chain AI",
     page_icon="📦",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="expanded",
 )
 
-st.title("📦 NovaRetail Supply Chain Assistant")
+# ---------------------------------------------------
+# Custom CSS
+# ---------------------------------------------------
 
 st.markdown("""
-Ask me about:
+<style>
 
-- 🚚 Shipment Tracking
-- 📦 Inventory
-- 🏭 Suppliers
-- ⚠️ Incidents
-- 🔄 Recovery Planning
-""")
+/* Page & Background */
+.stApp {
+    background: #f4f7fc;
+}
 
-# ----------------------------
-# Session State
-# ----------------------------
+.block-container {
+    padding-top: 2rem;
+}
+
+/* Force Sidebar Styling */
+section[data-testid="stSidebar"] {
+    display: block !important;
+    background-color: #17324d !important;
+    min-width: 300px !important;
+    max-width: 300px !important;
+}
+
+section[data-testid="stSidebar"] * {
+    color: white !important;
+}
+
+/* Sidebar Custom Button Styling to look like clickable list links */
+section[data-testid="stSidebar"] .stButton > button {
+    background-color: transparent !important;
+    color: #ffffff !important;
+    border: none !important;
+    text-align: left !important;
+    padding: 6px 0px !important;
+    font-size: 15px !important;
+    width: 100% !important;
+    box-shadow: none !important;
+}
+
+section[data-testid="stSidebar"] .stButton > button:hover {
+    color: #4da6ff !important;
+    background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Main Header Styling */
+.main-title {
+    font-size: 38px;
+    font-weight: 700;
+    color: #1f4e79;
+}
+
+.sub-title {
+    font-size: 16px;
+    color: #666;
+    margin-top: -6px;
+}
+
+/* Metric Cards */
+.metric-card {
+    background: white;
+    padding: 18px;
+    border-radius: 14px;
+    text-align: center;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.metric-title {
+    font-size: 15px;
+    color: #666;
+}
+
+.metric-value {
+    font-size: 30px;
+    font-weight: bold;
+    color: #1f4e79;
+}
+
+/* Chat Styling */
+.stChatMessage {
+    border-radius: 12px;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+# ---------------------------------------------------
+# Session State Initialization
+# ---------------------------------------------------
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
@@ -31,12 +110,115 @@ if "messages" not in st.session_state:
 if "memory" not in st.session_state:
     st.session_state.memory = {}
 
-if "pending_state" not in st.session_state:
-    st.session_state.pending_state = None
+# Variable to hold click events from sidebar options
+clicked_query = None
 
-# ----------------------------
+# ---------------------------------------------------
+# Sidebar
+# ---------------------------------------------------
+
+with st.sidebar:
+    st.title("📦 NovaRetail")
+
+    st.success("🟢 Ollama Connected")
+
+    st.divider()
+
+    st.subheader("Supported Operations")
+
+    # Interactive links for supported operations
+    if st.button("🚚  Shipment Tracking", use_container_width=True):
+        clicked_query = "Show me current shipment tracking status."
+
+    if st.button("📦  Inventory Management", use_container_width=True):
+        clicked_query = "Give me an inventory status report."
+
+    if st.button("🏭  Supplier Overview", use_container_width=True):
+        clicked_query = "Show supplier details and performance overview."
+
+    if st.button("⚠  Incident Resolution", use_container_width=True):
+        clicked_query = "Are there any active supply chain incidents?"
+
+    if st.button("🔄  Recovery Planning", use_container_width=True):
+        clicked_query = "Generate a recovery plan for delayed shipments."
+
+    if st.button("📊  Operations Reporting", use_container_width=True):
+        clicked_query = "Provide an overall operations summary report."
+
+    st.divider()
+
+    st.subheader("Session Stats")
+
+    st.metric("Messages", len(st.session_state.messages))
+    st.metric("Memory Keys", len(st.session_state.memory))
+
+    # Visual Capacity Bar
+    max_messages = 50
+    msg_count = len(st.session_state.messages)
+    usage_ratio = min(msg_count / max_messages, 1.0)
+
+    st.write("**Context Capacity**")
+    st.progress(usage_ratio, text=f"{msg_count} / {max_messages} messages")
+
+# ---------------------------------------------------
+# Main Content - Header
+# ---------------------------------------------------
+
+st.markdown("""
+<div class="main-title">
+📦 NovaRetail Supply Chain AI
+</div>
+
+<div class="sub-title">
+Enterprise Multi-Agent Supply Chain Operations Assistant
+</div>
+""", unsafe_allow_html=True)
+
+st.divider()
+
+# ---------------------------------------------------
+# KPI Cards
+# ---------------------------------------------------
+
+c1, c2, c3, c4 = st.columns(4)
+
+with c1:
+    st.markdown("""
+    <div class="metric-card">
+        <div class="metric-title">🚚 Shipments</div>
+        <div class="metric-value">3</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with c2:
+    st.markdown("""
+    <div class="metric-card">
+        <div class="metric-title">⚠ Delayed</div>
+        <div class="metric-value">1</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with c3:
+    st.markdown("""
+    <div class="metric-card">
+        <div class="metric-title">📦 Products</div>
+        <div class="metric-value">3</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with c4:
+    st.markdown("""
+    <div class="metric-card">
+        <div class="metric-title">🏭 Suppliers</div>
+        <div class="metric-value">3</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+st.write("")
+
+# ---------------------------------------------------
 # Display Chat History
-# ----------------------------
+# ---------------------------------------------------
 
 for message in st.session_state.messages:
 
@@ -45,16 +227,19 @@ for message in st.session_state.messages:
         with st.chat_message("user"):
             st.markdown(message.content)
 
-    else:
+    elif isinstance(message, AIMessage):
 
         with st.chat_message("assistant"):
             st.markdown(message.content)
 
-# ----------------------------
-# User Input
-# ----------------------------
+# ---------------------------------------------------
+# Chat Input & Processing
+# ---------------------------------------------------
 
-prompt = st.chat_input("Ask a supply chain question...")
+input_prompt = st.chat_input("Ask a supply chain question...")
+
+# Determine if input came from the chat bar or a clicked link button
+prompt = input_prompt or clicked_query
 
 if prompt:
 
@@ -66,100 +251,78 @@ if prompt:
         st.markdown(prompt)
 
     state = {
-
         "messages": st.session_state.messages,
-
         "user_query": prompt,
-
         "intent": "",
-
         "current_agent": "",
-
         "tool_result": {},
-
         "response": "",
-
         "approval": False,
-
         "memory": st.session_state.memory,
-
     }
-
-    result = graph.invoke(state)
-
-    st.session_state.memory = result["memory"]
-
-    assistant_reply = result["response"]
-
-    st.session_state.messages.append(
-        AIMessage(content=assistant_reply)
-    )
 
     with st.chat_message("assistant"):
 
-        st.markdown(assistant_reply)
+        with st.spinner("🤖 Thinking..."):
+            result = graph.invoke(state)
 
-        with st.expander("Execution Details"):
+        reply = result["response"]
 
-            st.write("Intent:", result["intent"])
-            st.write("Agent:", result["current_agent"])
-            st.json(result["tool_result"])
+        st.markdown(reply)
 
-    # --------------------------------
-    # Approval Required?
-    # --------------------------------
+        with st.expander("⚙ Execution Details"):
 
-    if (
-        "approval" in assistant_reply.lower()
-        or "approve" in assistant_reply.lower()
-    ):
+            col1, col2 = st.columns(2)
 
-        st.session_state.pending_state = result
+            with col1:
+                st.markdown("### Routing")
+                st.write("**Intent**")
+                st.info(result["intent"])
 
-# --------------------------------
-# Approval Buttons
-# --------------------------------
+                st.write("**Agent**")
+                st.success(result["current_agent"])
 
-if st.session_state.pending_state is not None:
+            with col2:
+                st.markdown("### Context")
 
-    st.divider()
+                st.write("**Memory Items**")
+                st.write(len(result["memory"]))
 
-    st.subheader("Human Approval Required")
+                st.write("**Conversation Messages**")
+                st.write(len(result["messages"]))
 
-    col1, col2 = st.columns(2)
+            st.divider()
 
-    with col1:
+            st.markdown("### Tool Output")
 
-        if st.button("✅ Approve"):
+            if result["tool_result"]:
+                st.json(result["tool_result"])
+            else:
+                st.info("No tool output.")
 
-            pending = st.session_state.pending_state
+            st.divider()
 
-            pending["approval"] = True
+            st.markdown("### Workflow")
 
-            result = graph.invoke(pending)
+            st.markdown(f"""
+✅ Supervisor
 
-            st.session_state.messages.append(
-                AIMessage(content=result["response"])
-            )
+⬇
 
-            st.session_state.memory = result["memory"]
+✅ {result["current_agent"]}
 
-            st.session_state.pending_state = None
+⬇
 
-            st.rerun()
+✅ Tool Executed
 
-    with col2:
+⬇
 
-        if st.button("❌ Reject"):
+✅ Response Generated
+""")
 
-            st.session_state.messages.append(
+    st.session_state.messages.append(
+        AIMessage(content=reply)
+    )
 
-                AIMessage(
-                    content="Operation cancelled."
-                )
-
-            )
-
-            st.session_state.pending_state = None
-
-            st.rerun()
+    st.session_state.memory = result["memory"]
+    st.rerun()

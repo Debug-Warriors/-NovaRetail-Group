@@ -2,14 +2,17 @@
 Inventory Agent
 
 Responsibilities:
-- Check product stock
+- Check product inventory
 - Detect shortages
-- Check warehouse availability
+- Check warehouse inventory
 """
 
 import re
 
-from langchain_core.messages import SystemMessage, HumanMessage
+from langchain_core.messages import (
+    SystemMessage,
+    HumanMessage,
+)
 
 from llm import llm
 from graph.state import SupplyChainState
@@ -27,12 +30,11 @@ from utils.prompt_loader import load_prompt
 INVENTORY_PROMPT = load_prompt("inventory.txt")
 
 
+# -------------------------------------------------------
+# Extract Product ID
+# -------------------------------------------------------
+
 def extract_product_id(query: str):
-    """
-    Extract product IDs like:
-    P100
-    P200
-    """
 
     match = re.search(r"P\d+", query.upper())
 
@@ -42,10 +44,11 @@ def extract_product_id(query: str):
     return None
 
 
+# -------------------------------------------------------
+# Extract Product Name
+# -------------------------------------------------------
+
 def extract_product_name(query: str):
-    """
-    Find a product by name.
-    """
 
     inventory = load_inventory()
 
@@ -54,31 +57,61 @@ def extract_product_name(query: str):
     for item in inventory:
 
         if item["product_name"].lower() in query_lower:
+
             return item["product_id"]
 
     return None
 
 
-def extract_warehouse(query: str):
-    """
-    Extract warehouse from natural language.
-    """
+# -------------------------------------------------------
+# Extract Warehouse ID
+# -------------------------------------------------------
 
-    warehouses = {
-        "dallas": "Dallas Regional Warehouse",
-        "new york": "New York Regional Warehouse",
-        "chicago": "Chicago Regional Warehouse",
+def extract_warehouse(query: str):
+
+    match = re.search(r"W\d+", query.upper())
+
+    if match:
+        return match.group()
+
+    warehouse_map = {
+
+        "dallas": "W001",
+
+        "new york": "W002",
+
+        "chicago": "W003",
+
+        "phoenix": "W004",
+
+        "miami": "W005",
+
+        "boston": "W006",
+
+        "los angeles": "W007",
+
+        "seattle": "W008",
+
+        "san francisco": "W009",
+
+        "denver": "W010"
+
     }
 
-    query_lower = query.lower()
+    q = query.lower()
 
-    for key, value in warehouses.items():
+    for city, wid in warehouse_map.items():
 
-        if key in query_lower:
-            return value
+        if city in q:
+
+            return wid
 
     return None
 
+
+# -------------------------------------------------------
+# Inventory Agent
+# -------------------------------------------------------
 
 def inventory_agent(state: SupplyChainState):
 
@@ -90,40 +123,45 @@ def inventory_agent(state: SupplyChainState):
 
     query_lower = query.lower()
 
-    # --------------------------------
-    # Overall Inventory Shortage
-    # --------------------------------
+    # --------------------------------------------------
+    # Inventory Shortages
+    # --------------------------------------------------
 
-    if (
-        "inventory shortage" in query_lower
-        or "identify shortage" in query_lower
-        or "identify inventory shortage" in query_lower
-        or "low stock products" in query_lower
-        or "all shortages" in query_lower
-        or "products below minimum" in query_lower
-    ):
+    if any(x in query_lower for x in [
+
+        "inventory shortage",
+
+        "identify shortage",
+
+        "identify inventory shortage",
+
+        "low stock products",
+
+        "all shortages",
+
+        "products below minimum"
+
+    ]):
 
         result = identify_inventory_shortage()
 
-    # --------------------------------
-    # Warehouse Availability
-    # --------------------------------
+    # --------------------------------------------------
+    # Warehouse Query
+    # --------------------------------------------------
 
     elif "warehouse" in query_lower:
 
         warehouse = extract_warehouse(query)
 
         if warehouse is None:
+
             warehouse = memory.get("last_warehouse")
 
         if warehouse is None:
 
             state["response"] = (
-                "Please specify a warehouse.\n\n"
-                "Examples:\n"
-                "- Dallas warehouse\n"
-                "- New York warehouse\n"
-                "- Chicago warehouse"
+                "Please provide a Warehouse ID (W001-W010) "
+                "or warehouse city."
             )
 
             return state
@@ -132,27 +170,27 @@ def inventory_agent(state: SupplyChainState):
 
         result = warehouse_availability(warehouse)
 
-    # --------------------------------
-    # Product Lookup
-    # --------------------------------
+    # --------------------------------------------------
+    # Product Query
+    # --------------------------------------------------
 
     else:
 
         product_id = extract_product_id(query)
 
         if product_id is None:
+
             product_id = extract_product_name(query)
 
         if product_id is None:
+
             product_id = memory.get("last_product")
 
         if product_id is None:
 
             state["response"] = (
-                "Please provide a Product ID or Product Name.\n\n"
-                "Examples:\n"
-                "- P100\n"
-                "- Wireless Headphones"
+                "Please provide a Product ID (P100-P119) "
+                "or product name."
             )
 
             return state
@@ -160,8 +198,13 @@ def inventory_agent(state: SupplyChainState):
         memory["last_product"] = product_id
 
         if (
+
             "shortage" in query_lower
-            or "low stock" in query_lower
+
+            or
+
+            "low stock" in query_lower
+
         ):
 
             result = check_inventory_shortage(product_id)
@@ -170,7 +213,15 @@ def inventory_agent(state: SupplyChainState):
 
             result = check_inventory(product_id)
 
+    # --------------------------------------------------
+    # Save Tool Result
+    # --------------------------------------------------
+
     state["tool_result"] = result
+
+    # --------------------------------------------------
+    # LLM Response
+    # --------------------------------------------------
 
     messages = [
 
@@ -186,9 +237,10 @@ Inventory Data:
 
 {result}
 
-Generate a helpful response.
+Generate a professional inventory response.
 """
-        ),
+        )
+
     ]
 
     response = llm.invoke(messages)

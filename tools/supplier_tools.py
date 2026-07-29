@@ -1,7 +1,8 @@
 """
 Supplier Tools
 
-Simulates NovaRetail Supplier Management System.
+Supplier management operations for NovaRetail.
+Compatible with the Phase 2 suppliers dataset.
 """
 
 import json
@@ -10,8 +11,11 @@ from pathlib import Path
 SUPPLIER_FILE = Path("data/suppliers.json")
 
 
+# -------------------------------------------------------
+# Load Suppliers
+# -------------------------------------------------------
+
 def load_suppliers():
-    """Load supplier data."""
 
     if not SUPPLIER_FILE.exists():
         return []
@@ -20,16 +24,18 @@ def load_suppliers():
         return json.load(file)
 
 
+# -------------------------------------------------------
+# Find Supplier
+# -------------------------------------------------------
+
 def find_supplier(supplier_name: str):
-    """
-    Find supplier by name.
-    """
 
     suppliers = load_suppliers()
 
     for supplier in suppliers:
 
         if supplier["name"].lower() == supplier_name.lower():
+
             return supplier
 
     return {
@@ -37,10 +43,11 @@ def find_supplier(supplier_name: str):
     }
 
 
+# -------------------------------------------------------
+# Supplier Availability
+# -------------------------------------------------------
+
 def check_supplier_availability(supplier_name: str):
-    """
-    Check supplier availability.
-    """
 
     supplier = find_supplier(supplier_name)
 
@@ -48,17 +55,31 @@ def check_supplier_availability(supplier_name: str):
         return supplier
 
     return {
-        "supplier": supplier["name"],
+
+        "supplier_id": supplier["supplier_id"],
+
+        "supplier_name": supplier["name"],
+
         "available": supplier["available"],
+
         "rating": supplier["rating"],
-        "location": supplier["location"]
+
+        "location": supplier["location"],
+
+        "country": supplier["country"],
+
+        "primary_warehouse": supplier["primary_warehouse"],
+
+        "products": supplier["products"]
+
     }
 
 
-def find_alternative_suppliers(product: str):
-    """
-    Find available suppliers for a product.
-    """
+# -------------------------------------------------------
+# Alternative Suppliers
+# -------------------------------------------------------
+
+def find_alternative_suppliers(product_id: str):
 
     suppliers = load_suppliers()
 
@@ -67,24 +88,27 @@ def find_alternative_suppliers(product: str):
     for supplier in suppliers:
 
         if (
-            product.lower() in [p.lower() for p in supplier["products"]]
+            product_id in supplier["products"]
             and supplier["available"]
         ):
 
-            alternatives.append(
-                {
-                    "supplier": supplier["name"],
-                    "rating": supplier["rating"],
-                    "location": supplier["location"],
-                    "available": supplier["available"],
-                }
-            )
+            alternatives.append({
 
-    if not alternatives:
+                "supplier_id": supplier["supplier_id"],
 
-        return {
-            "message": "No available alternative suppliers found."
-        }
+                "supplier_name": supplier["name"],
+
+                "rating": supplier["rating"],
+
+                "location": supplier["location"],
+
+                "country": supplier["country"],
+
+                "primary_warehouse": supplier["primary_warehouse"],
+
+                "available": supplier["available"]
+
+            })
 
     alternatives.sort(
         key=lambda x: x["rating"],
@@ -92,3 +116,19 @@ def find_alternative_suppliers(product: str):
     )
 
     return alternatives
+
+
+# -------------------------------------------------------
+# Top Rated Suppliers
+# -------------------------------------------------------
+
+def get_top_suppliers(limit=5):
+
+    suppliers = load_suppliers()
+
+    suppliers.sort(
+        key=lambda x: x["rating"],
+        reverse=True
+    )
+
+    return suppliers[:limit]
